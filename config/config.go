@@ -8,7 +8,7 @@ import (
 
 // Init 配置初始化
 func Init() error {
-	viper.AddConfigPath("../conf")
+	viper.AddConfigPath("/app/conf")
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv()
