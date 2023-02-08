@@ -18,7 +18,7 @@ type GrpcConfig struct {
 }
 
 // RunGrpcServer 启动grpc服务
-func RunGrpcServer(c *GrpcConfig) {
+func RunGrpcServer(c *GrpcConfig) error {
 	lis, err := net.Listen("tcp", c.Addr)
 	if err != nil {
 		log.Fatalf("[%v]cannot listen: %v, %v", c.Name, err)
@@ -37,5 +37,5 @@ func RunGrpcServer(c *GrpcConfig) {
 	c.RegisterFunc(s)
 
 	log.Infof("[%v]server started: %v", c.Name, c.Addr)
-	log.Fatal(s.Serve(lis))
+	return s.Serve(lis)
 }
