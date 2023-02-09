@@ -17,24 +17,30 @@ type GatewayConfig struct {
 	RegisterFunc func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error)
 }
 
+func CustomMatcher(key string) (string, bool) {
+	return key, false
+}
+
 // RunGatewayServer 启动网关服务
 func RunGatewayServer(c *GatewayConfig) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	mux := runtime.NewServeMux(runtime.WithMarshalerOption(
-		runtime.MIMEWildcard,
-		&runtime.JSONPb{
-			MarshalOptions: protojson.MarshalOptions{
-				UseEnumNumbers: true,
-				UseProtoNames:  true,
+	mux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(CustomMatcher),
+		runtime.WithMarshalerOption(
+			runtime.MIMEWildcard,
+			&runtime.JSONPb{
+				MarshalOptions: protojson.MarshalOptions{
+					UseEnumNumbers: true,
+					UseProtoNames:  true,
+				},
+				UnmarshalOptions: protojson.UnmarshalOptions{
+					DiscardUnknown: true, // If DiscardUnknown is set, unknown fields are ignored.
+				},
 			},
-			UnmarshalOptions: protojson.UnmarshalOptions{
-				DiscardUnknown: true, // If DiscardUnknown is set, unknown fields are ignored.
-			},
-		},
-	))
+		))
 	err := c.RegisterFunc(ctx, mux, c.Addr,
 		[]grpc.DialOption{grpc.WithInsecure()},
 	)
