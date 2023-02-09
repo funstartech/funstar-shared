@@ -18,7 +18,7 @@ type GatewayConfig struct {
 	RegisterFunc func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error)
 }
 
-func CustomMatcher(key string) (string, bool) {
+func customHeaderMatcher(key string) (string, bool) {
 	if strings.HasPrefix(key, "x-wx") {
 		return key, true
 	}
@@ -32,7 +32,7 @@ func RunGatewayServer(c *GatewayConfig) {
 	defer cancel()
 
 	mux := runtime.NewServeMux(
-		runtime.WithIncomingHeaderMatcher(CustomMatcher),
+		runtime.WithIncomingHeaderMatcher(customHeaderMatcher),
 		runtime.WithMarshalerOption(
 			runtime.MIMEWildcard,
 			&runtime.JSONPb{
