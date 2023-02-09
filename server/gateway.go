@@ -19,8 +19,7 @@ type GatewayConfig struct {
 }
 
 func customHeaderMatcher(key string) (string, bool) {
-	log.Debugf("header key: %v", key)
-	if strings.HasPrefix(key, "x-wx") {
+	if strings.HasPrefix(key, "X-") {
 		return key, true
 	}
 	return runtime.DefaultHeaderMatcher(key)
