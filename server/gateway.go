@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"net/http"
-	"net/textproto"
 	"strings"
 
 	"github.com/funstartech/funstar-shared/log"
@@ -20,12 +19,11 @@ type GatewayConfig struct {
 }
 
 func customHeaderMatcher(key string) (string, bool) {
-	switch key = textproto.CanonicalMIMEHeaderKey(key); {
-	case strings.HasPrefix(key, "X-Wx"):
+	log.Debugf("header key: %v", key)
+	if strings.HasPrefix(key, "x-wx") {
 		return key, true
-	default:
-		return runtime.DefaultHeaderMatcher(key)
 	}
+	return runtime.DefaultHeaderMatcher(key)
 }
 
 // RunGatewayServer 启动网关服务
