@@ -23,8 +23,9 @@ func customHeaderMatcher(key string) (string, bool) {
 	switch key = textproto.CanonicalMIMEHeaderKey(key); {
 	case strings.HasPrefix(key, "X-Wx"):
 		return key, true
+	default:
+		return runtime.DefaultHeaderMatcher(key)
 	}
-	return runtime.DefaultHeaderMatcher(key)
 }
 
 // RunGatewayServer 启动网关服务
