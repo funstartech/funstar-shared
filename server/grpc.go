@@ -18,13 +18,14 @@ type GrpcConfig struct {
 }
 
 // RunGrpcServer 启动grpc服务
-func RunGrpcServer(c *GrpcConfig) error {
+func RunGrpcServer(c *GrpcConfig) {
 	lis, err := net.Listen("tcp", c.Addr)
 	if err != nil {
 		log.Fatalf("[%v]cannot listen: %v, %v", c.Name, err)
 	}
 
 	var opts []grpc.ServerOption
+	// 鉴权拦截器
 	if c.AuthPublicKeyFile != "" {
 		in, err := auth.Interceptor(c.AuthPublicKeyFile)
 		if err != nil {
@@ -37,5 +38,5 @@ func RunGrpcServer(c *GrpcConfig) error {
 	c.RegisterFunc(s)
 
 	log.Infof("[%v]server started: %v", c.Name, c.Addr)
-	return s.Serve(lis)
+	log.Fatal(s.Serve(lis))
 }
