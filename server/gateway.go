@@ -19,7 +19,7 @@ type GatewayConfig struct {
 }
 
 func CustomMatcher(key string) (string, bool) {
-	if strings.HasPrefix(key, "wx-") {
+	if strings.HasPrefix(key, "x-wx") {
 		return key, true
 	}
 	return key, false
