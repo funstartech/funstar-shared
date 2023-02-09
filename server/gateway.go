@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/funstartech/funstar-shared/log"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -18,6 +19,9 @@ type GatewayConfig struct {
 }
 
 func CustomMatcher(key string) (string, bool) {
+	if strings.HasPrefix(key, "wx-") {
+		return key, true
+	}
 	return key, false
 }
 
