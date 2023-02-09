@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	openIDKey = "X-Wx-Openid"
+	openIDKey = "x-wx-openid"
 )
 
 // GetValue 获取header中指定key
