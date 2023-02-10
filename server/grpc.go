@@ -25,6 +25,8 @@ func RunGrpcServer(c *GrpcConfig) {
 	}
 
 	var opts []grpc.ServerOption
+	// 服务日志拦截器
+	opts = append(opts, grpc.UnaryInterceptor(log.ServerLogInterceptor))
 	// 鉴权拦截器
 	if c.AuthPublicKeyFile != "" {
 		in, err := auth.Interceptor(c.AuthPublicKeyFile)
