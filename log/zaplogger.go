@@ -45,15 +45,3 @@ func Error(args ...interface{}) {
 func Errorf(format string, args ...interface{}) {
 	sugar.Errorf(format, args...)
 }
-
-// Fatal logs to ERROR log. Arguments are handled in the manner of fmt.Print.
-// that all Fatal logs will exit with os.Exit(1).
-// Implementations may also call os.Exit() with a non-zero exit code.
-func Fatal(args ...interface{}) {
-	sugar.Fatal(args...)
-}
-
-// Fatalf logs to ERROR log. Arguments are handled in the manner of fmt.Printf.
-func Fatalf(format string, args ...interface{}) {
-	sugar.Fatalf(format, args...)
-}
