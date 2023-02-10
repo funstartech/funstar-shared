@@ -3,7 +3,6 @@ package cutils
 import (
 	"unsafe"
 
-	"github.com/funstartech/funstar-shared/log"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -28,7 +27,6 @@ func Uint82Str(u []uint8) string {
 func Obj2Json(obj interface{}) string {
 	bdata, err := jsoniter.Marshal(obj)
 	if err != nil {
-		log.Errorf("the jsoniter.Marshal occurs error:%s", err.Error())
 		return ""
 	}
 	return string(bdata)
