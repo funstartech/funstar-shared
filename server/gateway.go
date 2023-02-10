@@ -49,7 +49,7 @@ func RunGatewayServer(c *GatewayConfig) {
 		[]grpc.DialOption{grpc.WithInsecure()},
 	)
 	if err != nil {
-		panic("gateway cannot register service: " + err.Error())
+		log.Fatalf("cannot register service %s : %v", c.Name, err)
 	}
 	addr := ":80"
 	log.Infof("grpc gateway started at %s", addr)
