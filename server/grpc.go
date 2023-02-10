@@ -21,7 +21,7 @@ type GrpcConfig struct {
 func RunGrpcServer(c *GrpcConfig) {
 	lis, err := net.Listen("tcp", c.Addr)
 	if err != nil {
-		log.Fatalf("[%v]cannot listen: %v, %v", c.Name, err)
+		panic("grpc cannot listen: " + err.Error())
 	}
 
 	var opts []grpc.ServerOption
@@ -29,7 +29,7 @@ func RunGrpcServer(c *GrpcConfig) {
 	if c.AuthPublicKeyFile != "" {
 		in, err := auth.Interceptor(c.AuthPublicKeyFile)
 		if err != nil {
-			log.Fatalf("[%v]cannot create auth intercept: %v", c.Name, err)
+			panic("cannot create auth intercept: " + err.Error())
 		}
 		opts = append(opts, grpc.UnaryInterceptor(in))
 	}
