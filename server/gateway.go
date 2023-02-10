@@ -53,5 +53,5 @@ func RunGatewayServer(c *GatewayConfig) {
 	}
 	addr := ":80"
 	log.Infof("grpc gateway started at %s", addr)
-	log.Fatal(http.ListenAndServe(addr, mux))
+	panic(http.ListenAndServe(addr, mux))
 }

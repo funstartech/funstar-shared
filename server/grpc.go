@@ -38,5 +38,5 @@ func RunGrpcServer(c *GrpcConfig) {
 	c.RegisterFunc(s)
 
 	log.Infof("[%v]server started: %v", c.Name, c.Addr)
-	log.Fatal(s.Serve(lis))
+	panic(s.Serve(lis))
 }
