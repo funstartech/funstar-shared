@@ -2,6 +2,7 @@ package log
 
 import (
 	"context"
+	"time"
 
 	"github.com/funstartech/funstar-shared/cutils"
 	"google.golang.org/grpc"
@@ -11,8 +12,14 @@ import (
 func ServerLogInterceptor(ctx context.Context, req interface{},
 	info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	reqJson := cutils.Obj2Json(req)
+	start := time.Now()
 	rsp, err := handler(ctx, req)
 	rspJson := cutils.Obj2Json(rsp)
-	Debugf("[%v] req: %v, rsp: %v, err: %v", info.FullMethod, reqJson, rspJson, err)
+	cost := time.Since(start).Milliseconds()
+	if err == nil {
+		Debugf("[%v][cost: %vms] req: %v, rsp: %v", info.FullMethod, cost, reqJson, rspJson)
+	} else {
+		Errorf("[%v][cost: %vms] req: %v, err: %v", info.FullMethod, cost, reqJson, err)
+	}
 	return rsp, err
 }
