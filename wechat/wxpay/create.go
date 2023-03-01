@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/funstartech/funstar-proto/go/common"
+	"github.com/funstartech/funstar-proto/go/wxpay"
 	"github.com/funstartech/funstar-shared/cutils"
 	"github.com/funstartech/funstar-shared/gheader"
 	"github.com/funstartech/funstar-shared/ghttp"
@@ -60,21 +60,21 @@ type CreateOrderRsp struct {
 	Errcode  int    `json:"errcode"`
 	Errmsg   string `json:"errmsg"`
 	Respdata struct {
-		ReturnCode string            `json:"return_code"`
-		ReturnMsg  string            `json:"return_msg"`
-		Payment    *common.WxPayment `json:"payment"`
-		AppID      string            `json:"appid"`
-		MchID      string            `json:"mch_id"`
-		SubAppID   string            `json:"sub_appid"`
-		SubMchID   string            `json:"sub_mch_id"`
-		DeviceInfo string            `json:"device_info"`
-		NonceStr   string            `json:"nonce_str"`
-		Sign       string            `json:"sign"`
-		ResultCode string            `json:"result_code"`
-		ErrCode    string            `json:"err_code"`
-		ErrCodeDes string            `json:"err_code_des"`
-		TradeType  string            `json:"trade_type"`
-		PrepayID   string            `json:"prepay_id"`
+		ReturnCode string           `json:"return_code"`
+		ReturnMsg  string           `json:"return_msg"`
+		Payment    *wxpay.WxPayment `json:"payment"`
+		AppID      string           `json:"appid"`
+		MchID      string           `json:"mch_id"`
+		SubAppID   string           `json:"sub_appid"`
+		SubMchID   string           `json:"sub_mch_id"`
+		DeviceInfo string           `json:"device_info"`
+		NonceStr   string           `json:"nonce_str"`
+		Sign       string           `json:"sign"`
+		ResultCode string           `json:"result_code"`
+		ErrCode    string           `json:"err_code"`
+		ErrCodeDes string           `json:"err_code_des"`
+		TradeType  string           `json:"trade_type"`
+		PrepayID   string           `json:"prepay_id"`
 	} `json:"respdata"`
 }
 
