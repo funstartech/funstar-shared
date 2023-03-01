@@ -1,6 +1,10 @@
 package cutils
 
 import (
+	"fmt"
+	"math/rand"
+	"net"
+	"time"
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
@@ -30,4 +34,29 @@ func Obj2Json(obj interface{}) string {
 		return ""
 	}
 	return string(bdata)
+}
+
+// RandString 随机字符串
+func RandString(length int) string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, length+2)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)[2 : length+2]
+}
+
+// GetIP 获取本机ip
+func GetIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return ""
+	}
+	for _, address := range addrs {
+		// 检查ip地址判断是否回环地址
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
+			}
+		}
+	}
+	return ""
 }
