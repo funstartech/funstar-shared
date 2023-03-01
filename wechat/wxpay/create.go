@@ -5,7 +5,6 @@ package wxpay
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/funstartech/funstar-shared/cutils"
@@ -37,7 +36,7 @@ type CreateOrderReq struct {
 	SubMchID       string     `json:"sub_mch_id"`
 	DeviceInfo     string     `json:"device_info"`
 	NonceStr       string     `json:"nonce_str"`
-	Body           string     `json:"string"`
+	Body           string     `json:"body"`
 	Detail         string     `json:"detail"`
 	Attach         string     `json:"attach"`
 	OutTradeNo     string     `json:"out_trade_no"`
@@ -86,7 +85,7 @@ func CreateOrder(ctx context.Context, orderID, summary string, price int32, c *C
 	now := time.Now()
 	req := CreateOrderReq{
 		CallbackType:   2,
-		EnvID:          os.Getenv("X-WX-ENV"),
+		EnvID:          gheader.GetValue(ctx, "x-wx-env"),
 		Container:      c,
 		SubMchID:       subMchID,
 		DeviceInfo:     "WEB",
