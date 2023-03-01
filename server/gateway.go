@@ -38,7 +38,7 @@ func RunGatewayServer(c *GatewayConfig) {
 			&runtime.JSONPb{
 				MarshalOptions: protojson.MarshalOptions{
 					UseEnumNumbers:  true,
-					UseProtoNames:   true,
+					UseProtoNames:   false,
 					EmitUnpopulated: true,
 				},
 				UnmarshalOptions: protojson.UnmarshalOptions{
