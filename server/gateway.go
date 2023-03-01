@@ -37,8 +37,9 @@ func RunGatewayServer(c *GatewayConfig) {
 			runtime.MIMEWildcard,
 			&runtime.JSONPb{
 				MarshalOptions: protojson.MarshalOptions{
-					UseEnumNumbers: true,
-					UseProtoNames:  true,
+					UseEnumNumbers:  true,
+					UseProtoNames:   true,
+					EmitUnpopulated: true,
 				},
 				UnmarshalOptions: protojson.UnmarshalOptions{
 					DiscardUnknown: true, // If DiscardUnknown is set, unknown fields are ignored.
