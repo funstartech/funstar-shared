@@ -24,7 +24,7 @@ const (
 	createOrderPath = "http://api.weixin.qq.com/_/pay/unifiedorder"
 )
 
-type Container struct {
+type container struct {
 	Service string `json:"service"`
 	Path    string `json:"path"`
 }
@@ -34,7 +34,7 @@ type CreateOrderReq struct {
 	CallbackType   int        `json:"callback_type"`
 	EnvID          string     `json:"env_id"`
 	FunctionName   string     `json:"function_name"`
-	Container      *Container `json:"container"`
+	Container      *container `json:"container"`
 	SubMchID       string     `json:"sub_mch_id"`
 	DeviceInfo     string     `json:"device_info"`
 	NonceStr       string     `json:"nonce_str"`
@@ -79,16 +79,19 @@ type CreateOrderRsp struct {
 }
 
 // CreateOrder 创建订单
-func CreateOrder(ctx context.Context, orderID, summary string, price int32, c *Container) (*CreateOrderRsp, error) {
+func CreateOrder(ctx context.Context, orderID, summary string, price int32, callbackPath string) (*CreateOrderRsp, error) {
 	openID, err := gheader.GetWxOpenID(ctx)
 	if err != nil {
 		return nil, err
 	}
 	now := time.Now()
 	req := CreateOrderReq{
-		CallbackType:   2,
-		EnvID:          os.Getenv("CBR_ENV_ID"),
-		Container:      c,
+		EnvID:        os.Getenv("CBR_ENV_ID"),
+		CallbackType: 2,
+		Container: &container{
+			Service: "gateway",
+			Path:    callbackPath,
+		},
 		SubMchID:       subMchID,
 		DeviceInfo:     "WEB",
 		NonceStr:       cutils.RandString(32),
