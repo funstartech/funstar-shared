@@ -13,7 +13,6 @@ import (
 
 // GatewayConfig 网关服务配置
 type GatewayConfig struct {
-	Name         string
 	Addr         string
 	RegisterFunc func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error)
 }
