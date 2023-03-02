@@ -80,7 +80,7 @@ type CreateOrderRsp struct {
 
 // CreateOrder 创建订单
 func CreateOrder(ctx context.Context, orderID, summary string, price int32, callbackPath string) (*CreateOrderRsp, error) {
-	openID, err := gheader.GetWxOpenID(ctx)
+	openid, err := gheader.GetWxOpenID(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func CreateOrder(ctx context.Context, orderID, summary string, price int32, call
 		TimeStart:      now.Format(timeFormat),
 		TimeExpire:     now.Add(time.Minute * 5).Format(timeFormat),
 		TradeType:      "JSAPI",
-		Openid:         openID,
+		Openid:         openid,
 	}
 	rsp := &CreateOrderRsp{}
 	if err := ghttp.Post(createOrderPath, req, rsp); err != nil {

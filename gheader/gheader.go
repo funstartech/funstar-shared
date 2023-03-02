@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	openIDKey = "x-wx-openid"
+	openidKey = "x-wx-openid"
 )
 
 // GetValue 获取header中指定key
@@ -28,7 +28,7 @@ func GetValue(ctx context.Context, key string) string {
 
 // GetWxOpenID 获取微信openid
 func GetWxOpenID(ctx context.Context) (string, error) {
-	value := metadata.ValueFromIncomingContext(ctx, openIDKey)
+	value := metadata.ValueFromIncomingContext(ctx, openidKey)
 	if len(value) > 0 {
 		return value[0], nil
 	}
@@ -36,12 +36,12 @@ func GetWxOpenID(ctx context.Context) (string, error) {
 }
 
 // CheckOpenID 校验微信openid
-func CheckOpenID(ctx context.Context, openID string) error {
+func CheckOpenID(ctx context.Context, openid string) error {
 	openid, err := GetWxOpenID(ctx)
 	if err != nil {
 		return err
 	}
-	if openid != openID {
+	if openid != openid {
 		return status.Errorf(codes.InvalidArgument, "openid not equal")
 	}
 	return nil
