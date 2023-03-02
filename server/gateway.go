@@ -26,7 +26,7 @@ func customHeaderMatcher(key string) (string, bool) {
 }
 
 // RunGatewayServer 启动网关服务
-func RunGatewayServer(c *GatewayConfig) {
+func RunGatewayServer(configs []*GatewayConfig) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -46,11 +46,13 @@ func RunGatewayServer(c *GatewayConfig) {
 				},
 			},
 		))
-	err := c.RegisterFunc(ctx, mux, c.Addr,
-		[]grpc.DialOption{grpc.WithInsecure()},
-	)
-	if err != nil {
-		panic("gateway cannot register service: " + err.Error())
+	for _, c := range configs {
+		err := c.RegisterFunc(ctx, mux, c.Addr,
+			[]grpc.DialOption{grpc.WithInsecure()},
+		)
+		if err != nil {
+			panic("gateway cannot register service: " + err.Error())
+		}
 	}
 	addr := ":80"
 	log.Infof("grpc gateway started at %s", addr)
