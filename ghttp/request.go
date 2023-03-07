@@ -12,10 +12,11 @@ import (
 
 // Post 发送post请求
 func Post(path string, req interface{}, rsp interface{}) error {
-	mJson, _ := jsoniter.Marshal(req)
-	contentReader := bytes.NewReader(mJson)
-
-	resp, err := http.Post(path, "application/json", contentReader)
+	mJson, err := jsoniter.Marshal(req)
+	if err != nil {
+		return err
+	}
+	resp, err := http.Post(path, "application/json", bytes.NewReader(mJson))
 	if err != nil {
 		return err
 	}
