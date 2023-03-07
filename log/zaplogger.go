@@ -4,7 +4,12 @@ import (
 	"go.uber.org/zap"
 )
 
-var sugar = zap.NewExample().Sugar()
+var sugar *zap.SugaredLogger
+
+func init() {
+	logger, _ := zap.NewDevelopment()
+	sugar = logger.Sugar()
+}
 
 // Debug logs to DEBUG log. Arguments are handled in the manner of fmt.Print.
 func Debug(args ...interface{}) {
