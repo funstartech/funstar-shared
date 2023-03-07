@@ -6,22 +6,13 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/funstartech/funstar-proto/go/wxpay"
 	"github.com/funstartech/funstar-shared/cutils"
 	"github.com/funstartech/funstar-shared/gheader"
 	"github.com/funstartech/funstar-shared/ghttp"
-)
-
-const (
-	timeFormat = "20060102150405"
-	// 商家名称
-	mchName = "繁星赏"
-	// 子商户号
-	subMchID = "1638991683"
-	// 请求路径
-	createOrderPath = "http://api.weixin.qq.com/_/pay/unifiedorder"
 )
 
 type container struct {
@@ -79,13 +70,14 @@ type CreateOrderRsp struct {
 }
 
 // CreateOrder 创建订单
-func CreateOrder(ctx context.Context, orderID, summary string, price int32, callbackPath string) (*CreateOrderRsp, error) {
+func CreateOrder(ctx context.Context, orderID uint64,
+	summary string, price int32, callbackPath string) (*CreateOrderRsp, error) {
 	openid, err := gheader.GetWxOpenID(ctx)
 	if err != nil {
 		return nil, err
 	}
 	now := time.Now()
-	req := CreateOrderReq{
+	req := &CreateOrderReq{
 		EnvID:        os.Getenv("CBR_ENV_ID"),
 		CallbackType: 2,
 		Container: &container{
@@ -96,7 +88,7 @@ func CreateOrder(ctx context.Context, orderID, summary string, price int32, call
 		DeviceInfo:     "WEB",
 		NonceStr:       cutils.RandString(32),
 		Body:           fmt.Sprintf("%s-%s", mchName, summary),
-		OutTradeNo:     orderID,
+		OutTradeNo:     strconv.FormatUint(orderID, 10),
 		TotalFee:       price,
 		SpbillCreateIP: cutils.GetIP(),
 		TimeStart:      now.Format(timeFormat),
