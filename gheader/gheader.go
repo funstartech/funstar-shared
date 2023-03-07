@@ -14,7 +14,7 @@ const (
 
 // GetValue 获取header中指定key
 func GetValue(ctx context.Context, key string) string {
-	md, ok := metadata.FromOutgoingContext(ctx)
+	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return ""
 	}
@@ -24,6 +24,11 @@ func GetValue(ctx context.Context, key string) string {
 		}
 	}
 	return ""
+}
+
+// SetWxOpenID 设置微信openid
+func SetWxOpenID(ctx context.Context, openid string) context.Context {
+	return metadata.AppendToOutgoingContext(ctx, openidKey, openid)
 }
 
 // GetWxOpenID 获取微信openid
