@@ -2,8 +2,8 @@ package server
 
 import (
 	"context"
-	"io/ioutil"
 	"net/http"
+	"net/http/httputil"
 	"strings"
 
 	"github.com/funstartech/funstar-shared/log"
@@ -24,14 +24,6 @@ func customHeaderMatcher(key string) (string, bool) {
 		return key, true
 	}
 	return runtime.DefaultHeaderMatcher(key)
-}
-
-func customErrorHandler(ctx context.Context,
-	mux *runtime.ServeMux, marshaler runtime.Marshaler,
-	w http.ResponseWriter, r *http.Request, err error) {
-	s, _ := ioutil.ReadAll(r.Body)
-	log.Errorf("req: %s, err: %v", s, err)
-	runtime.DefaultHTTPErrorHandler(ctx, mux, marshaler, w, r, err)
 }
 
 // RunGatewayServer 启动网关服务
@@ -66,5 +58,13 @@ func RunGatewayServer(configs []*GatewayConfig) {
 	}
 	addr := ":80"
 	log.Infof("grpc gateway started at %s", addr)
-	panic(http.ListenAndServe(addr, mux))
+	panic(http.ListenAndServe(addr, tracingWrapper(mux)))
+}
+
+func tracingWrapper(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ := httputil.DumpRequest(r, true)
+		log.Debugf("[%v] %s", r.URL, body)
+		h.ServeHTTP(w, r)
+	})
 }
