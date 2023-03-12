@@ -33,7 +33,6 @@ func RunGatewayServer(configs []*GatewayConfig) {
 	defer cancel()
 
 	mux := runtime.NewServeMux(
-		runtime.WithErrorHandler(customErrorHandler),
 		runtime.WithIncomingHeaderMatcher(customHeaderMatcher),
 		runtime.WithMarshalerOption(
 			runtime.MIMEWildcard,
