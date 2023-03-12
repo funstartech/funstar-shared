@@ -2,12 +2,14 @@ package server
 
 import (
 	"context"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
 	"github.com/funstartech/funstar-shared/log"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -24,6 +26,14 @@ func customHeaderMatcher(key string) (string, bool) {
 	return runtime.DefaultHeaderMatcher(key)
 }
 
+func customErrorHandler(ctx context.Context,
+	mux *runtime.ServeMux, marshaler runtime.Marshaler,
+	w http.ResponseWriter, r *http.Request, err error) {
+	s, _ := ioutil.ReadAll(r.Body)
+	log.Errorf("req: %s, err: %v", s, err)
+	runtime.DefaultHTTPErrorHandler(ctx, mux, marshaler, w, r, err)
+}
+
 // RunGatewayServer 启动网关服务
 func RunGatewayServer(configs []*GatewayConfig) {
 	ctx := context.Background()
@@ -31,6 +41,7 @@ func RunGatewayServer(configs []*GatewayConfig) {
 	defer cancel()
 
 	mux := runtime.NewServeMux(
+		runtime.WithErrorHandler(customErrorHandler),
 		runtime.WithIncomingHeaderMatcher(customHeaderMatcher),
 		runtime.WithMarshalerOption(
 			runtime.MIMEWildcard,
@@ -47,7 +58,7 @@ func RunGatewayServer(configs []*GatewayConfig) {
 		))
 	for _, c := range configs {
 		err := c.RegisterFunc(ctx, mux, c.Addr,
-			[]grpc.DialOption{grpc.WithInsecure()},
+			[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
 		)
 		if err != nil {
 			panic("gateway cannot register service: " + err.Error())
