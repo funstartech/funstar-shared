@@ -71,7 +71,7 @@ type CreateOrderRsp struct {
 
 // CreateOrder 创建订单
 func CreateOrder(ctx context.Context, orderID uint64,
-	summary string, price int32, callbackPath string) (*CreateOrderRsp, error) {
+	summary string, price int32, callbackPath string, expire time.Duration) (*CreateOrderRsp, error) {
 	openid, err := gheader.GetWxOpenID(ctx)
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func CreateOrder(ctx context.Context, orderID uint64,
 		TotalFee:       price,
 		SpbillCreateIP: cutils.GetIP(),
 		TimeStart:      now.Format(timeFormat),
-		TimeExpire:     now.Add(time.Minute * 5).Format(timeFormat),
+		TimeExpire:     now.Add(expire).Format(timeFormat),
 		TradeType:      "JSAPI",
 		Openid:         openid,
 	}
