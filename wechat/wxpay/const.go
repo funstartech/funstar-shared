@@ -11,4 +11,6 @@ const (
 	createOrderPath = "http://api.weixin.qq.com/_/pay/unifiedorder"
 	// 关闭订单
 	closeOrderPath = "http://api.weixin.qq.com/_/pay/closeorder"
+	// 查询订单
+	queryOrderPath = "http://api.weixin.qq.com/_/pay/queryorder"
 )
