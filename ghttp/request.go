@@ -27,6 +27,7 @@ func Post(path string, req interface{}, rsp interface{}) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("rsp: %s\n", body)
 	if err = jsoniter.Unmarshal(body, rsp); err != nil {
 		return err
 	}
