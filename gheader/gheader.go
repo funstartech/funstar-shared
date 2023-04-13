@@ -2,6 +2,7 @@ package gheader
 
 import (
 	"context"
+	"regexp"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -10,6 +11,7 @@ import (
 
 const (
 	openidKey = "x-wx-openid"
+	referKey  = "grpcgateway-referer"
 )
 
 // GetValue 获取header中指定key
@@ -50,4 +52,18 @@ func CheckOpenID(ctx context.Context, openid string) error {
 		return status.Errorf(codes.InvalidArgument, "openid not equal")
 	}
 	return nil
+}
+
+// GetVersion 获取小程序版本
+func GetVersion(ctx context.Context) string {
+	value := metadata.ValueFromIncomingContext(ctx, referKey)
+	if len(value) == 0 {
+		return ""
+	}
+	reg := regexp.MustCompile(`servicewechat.com/.*?/(.*?)/page-frame`)
+	b := reg.FindStringSubmatch(value[0])
+	if len(b) < 2 {
+		return ""
+	}
+	return b[1]
 }
