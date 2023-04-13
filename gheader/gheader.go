@@ -71,8 +71,5 @@ func GetVersion(ctx context.Context) string {
 // IsDebugVersion 是否是调试版本
 func IsDebugVersion(ctx context.Context) bool {
 	version := GetVersion(ctx)
-	if version == "0" || version == "devtools" {
-		return true
-	}
-	return false
+	return version == "0" || version == "devtools"
 }
